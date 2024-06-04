@@ -7,27 +7,53 @@ body {
     font-size: var(--font-size);
 }
 #Terminal {
+    max-width: var(--terminal-screen-width);
+    background-color: var(--bg-color);
 }
 #TerminalScreen {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.VerticalSplit {
+    flex-direction: column;
+}
+.HorizontalSplit {
+    flex-direction: row;
 }
 #Screen {
-    width: var(--terminal-screen-width);
+    width: 100%;
     height: var(--terminal-screen-height);
-    background-color: var(--bg-color);
     color: var(--font-color);
     font-family: "DotGothic16", sans-serif;
-    /* padding: 1rem; */
+    padding: 1rem;
     display: grid;
     grid-template-rows: 1fr auto;
+    border-radius: 6px;
+    border: 1px solid white;
 }
-#ScreenInput {
-    background-color: var(--bg-color);
-    border: none;
-    border-bottom: 1px solid white;
-    color: var(--font-color);
-    font-size: var(--font-size);
-    padding-bottom: 1rem;
+#ScreenDisplay {
+    padding: 0;
+    margin: 0;
+    li {
+        list-style: none;
+    }
 }
-#ScreenInput:focus {
-    outline: none;
+
+#SceenInputContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px;
+    #ScreenInput {
+        background-color: var(--bg-color);
+        border: none;
+        color: var(--font-color);
+        font-size: var(--font-size);
+    }
+    #ScreenInput:focus {
+        outline: none;
+    }
+    #InputPrefix {
+    }
 }

@@ -17,7 +17,7 @@ export class TerminalScreen {
             this.#TreminalScreenContainer.id = "TerminalScreen";
         }
         this.#Screens = [];
-        this.#Screens.push(new Screen(this.onUpdate));
+        this.#Screens.push(new Screen(this.#Screens.length, this.onUpdate));
     }
     appendToParent(docElement) {
         if (docElement instanceof HTMLElement) {

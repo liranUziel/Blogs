@@ -1,19 +1,24 @@
 import { Dictionaryree } from "../../../../DictenaryTree.js";
 
-export default class KeyWordsHandler {
+class KeyWordsHandler {
     keyWords;
-    KeyWordTree = new Dictionaryree();
-    constructor() {
-        fetch("Scripts/Modules/logic/keywords.json").then((response) => {
+    KeyWordTree;
+    constructor(filePath) {
+        this.KeyWordTree = new Dictionaryree();
+        fetch(filePath).then((response) => {
             response.json().then((data) => {
-                this.keywords = data.keyword;
-                this.forEach((word) => {
-                    KeyWordTree.addWord(word);
+                this.keyWords = data.keyword;
+                this.keyWords.forEach((word) => {
+                    this.KeyWordTree.addWord(word);
                 });
             });
         });
     }
-    isKeyWord() {
+    isKeyWord(word) {
         return this.KeyWordTree.findWord(word);
     }
 }
+
+export const keyword = new KeyWordsHandler(
+    "./Scripts/Modules/logic/KeyWords.json"
+);
