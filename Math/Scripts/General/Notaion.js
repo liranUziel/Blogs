@@ -41,6 +41,6 @@ function letterWithCaret(letter) {
     return letter + "\u0302";
 }
 
-module.exports = {
-    toSubscript,
-};
+// module.exports = {
+//     toSubscript,
+// };
