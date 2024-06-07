@@ -1,11 +1,10 @@
-console.log(`running...`);
+const liveserver = require("./LiveServer");
+const app = liveserver();
 
-//creating a liveServer
+app.get("/", (req, res) => {
+    res.end("Hello, World!");
+});
 
-
-//createing a hotloader 
-
-//if file change reaload page?
-
-
-//create .js watch dog
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});

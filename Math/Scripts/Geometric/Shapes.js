@@ -7,6 +7,11 @@ const checkType = (object, type) => {
 // All shaps classes are 2D shapres
 class Shape {
     constructor() {}
+    checkType(object, type) {
+        if (!(object instanceof type)) {
+            throw new Error(`${object} invalid ${type.name}`);
+        }
+    }
 }
 class Point {
     x;
@@ -401,7 +406,18 @@ class Circle {
         return this.r * 2;
     }
     getEquation() {
-        return { h: this.c.x, k: this.c.y, r: this.r };
+        return {
+            h: this.c.x,
+            k: this.c.y,
+            r: this.r,
+            f: (x) => {
+                //y = sqrt(r^2 - (x−h)^2) + k
+                return (
+                    Math.sqrt(Math.pow(this.r, 2) - Math.pow(x - this.c.x, 2)) +
+                    this.c.y
+                );
+            },
+        };
     }
     getPointFromAngle(alpha, inRadians = false) {
         const angle = inRadians ? alpha : alpha * (Math.PI / 180);
@@ -411,7 +427,7 @@ class Circle {
         );
         return point;
     }
-    //(x−h) 2 +(y−k) 2 = r 2
+    //(x−h)^2 +(y−k)^2 = r^2
     isPointOnCircumference(point) {
         checkType(point, Point);
         const distance = point.distance(this.c);
@@ -421,6 +437,11 @@ class Circle {
         checkType(point, Point);
         const distance = point.distance(this.c);
         return distance <= this.r;
+    }
+    isCircleIntercect(circle) {
+        checkType(circle, Circle);
+        const distance = this.c.distanceFrom(circle.c);
+        return distance <= this.r || distance <= circle.r;
     }
     isLineIntercect(line) {
         checkType(line, Line);
@@ -450,6 +471,54 @@ class Circle {
         return false;
     }
 }
-let l = new Line(new Point(1, 15), new Point(6, 10));
-let c = new Circle(new Point(3, 5), 10);
-console.log(c.isLineIntercect(l));
+
+class Polygon {
+    #maxX;
+    #minX;
+    #maxY;
+    #minY;
+    constructor(points) {
+        // points is array of at least 3 points
+        if (!Array.isArray(points)) {
+            throw new Error("Points should be an array");
+        }
+        if (points.length < 3) {
+            throw new Error("polygon have at least 3 points");
+        }
+        const allPointsValid = points.reduce((isValid, point) => {
+            return isValid && point instanceof Point;
+        }, true);
+
+        if (!allPointsValid) {
+            throw new Error("All elements must be instances of Point");
+        }
+        //here we can create lines array;
+        this.points = points;
+        this.#minX = this.points[0].x;
+        this.#maxX = this.points[0].x;
+        this.#minY = this.points[0].y;
+        this.#maxY = this.points[0].y;
+        this.edges = [];
+        for (let i = 0; i < points.length; i++) {
+            const pointA = points[i];
+            //update min and max
+            this.#updateMinMax(pointA);
+            const pointB = points[(i + 1) % points.length];
+            this.edges[i] = new Line(pointA, pointB);
+        }
+    }
+    #updateMinMax(point) {
+        if (point.x > this.#maxX) {
+            this.#maxX = point.x;
+        }
+        if (point.x < this.#minX) {
+            this.#minX = point.x;
+        }
+        if (point.y > this.#maxY) {
+            this.#maxY = point.y;
+        }
+        if (point.y < this.#minY) {
+            this.#minY = point.y;
+        }
+    }
+}
