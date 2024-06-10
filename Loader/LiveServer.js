@@ -5,7 +5,7 @@ class LiveServer {
     constructor() {
         this.#server = http.createServer(this.#handleRequest);
         this.#server.routes = {};
-        this.#server.middleware = {};
+        this.#server.middleware = [];
     }
     use(middleware) {
         this.#server.middleware.push(middleware);
@@ -18,18 +18,12 @@ class LiveServer {
     }
     #handleRequest(req, res) {
         const route = this.routes[req.url];
+        const middlewareChain = this.#server.middleware.slice();
         if (route && route.method === req.method) {
             res.statusCode = 200;
-            /**
-             res.setHeader("Content-Type", "text/html");
-            // Read the HTML file
-            const fs = require('fs');
-            const path = require('path');
-            const htmlFilePath = path.join(__dirname, 'path/to/your/html/file.html');
-            const html = fs.readFileSync(htmlFilePath, 'utf8');
-             */
             res.setHeader("Content-Type", "text/plain");
             res.send = res.end;
+            // create custom req and res
             route.callback(req, res);
         } else {
             res.statusCode = 404;
